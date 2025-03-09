@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Product Selection</title>
     <script>
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbzddXdMnssljGZRNz4f9ehcYaCJs5ge15OeGjK4PKt-kbcpsXleb6H2H2v4x2uzfWOj/exec";
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbxz6yJwJqYW4VZcEDrr1fOynAumd6dJrwk4ubH9tTCRA6aq7dwpSSjFnHyyzpuJ8K7rDg/exec"; // Replace with your actual script URL
 
         // Fetch product list from Google Sheet
         function loadProducts() {
@@ -49,25 +49,6 @@
         }
 
         window.onload = loadProducts;
-        fetch("YOUR_GOOGLE_SCRIPT_URL", {
-    method: "GET",
-    headers: {
-        "Content-Type": "application/json"
-    }
-})
-.then(response => response.json())
-.then(products => {
-    let productList = document.getElementById("productList");
-    productList.innerHTML = "";
-    
-    products.forEach(product => {
-        let label = document.createElement("label");
-        label.innerHTML = `<input type="checkbox" name="product" value="${product}"> ${product}`;
-        productList.appendChild(label);
-        productList.appendChild(document.createElement("br"));
-    });
-})
-.catch(error => console.error("Error fetching products:", error));
     </script>
 </head>
 <body>
