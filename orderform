@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Product Selection</title>
+    <script>
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbzddXdMnssljGZRNz4f9ehcYaCJs5ge15OeGjK4PKt-kbcpsXleb6H2H2v4x2uzfWOj/exec";
+
+        // Fetch product list from Google Sheet
+        function loadProducts() {
+            fetch(scriptUrl)
+            .then(response => response.json())
+            .then(products => {
+                let productList = document.getElementById("productList");
+                productList.innerHTML = ""; // Clear existing items
+                
+                products.forEach(product => {
+                    let label = document.createElement("label");
+                    label.innerHTML = `<input type="checkbox" name="product" value="${product}"> ${product}`;
+                    productList.appendChild(label);
+                    productList.appendChild(document.createElement("br"));
+                });
+            })
+            .catch(error => console.error("Error fetching products:", error));
+        }
+
+        // Submit selected products to Google Sheet
+        function submitForm() {
+            var name = document.getElementById("name").value;
+            var products = Array.from(document.querySelectorAll('input[name="product"]:checked'))
+                               .map(p => p.value);
+
+            if (!name || products.length === 0) {
+                alert("Please enter a name and select at least one product.");
+                return;
+            }
+
+            var data = { name: name, products: products };
+
+            fetch(scriptUrl, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.text())
+            .then(data => alert("Order submitted successfully!"))
+            .catch(error => alert("Error: " + error));
+        }
+
+        window.onload = loadProducts;
+        fetch("YOUR_GOOGLE_SCRIPT_URL", {
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json"
+    }
+})
+.then(response => response.json())
+.then(products => {
+    let productList = document.getElementById("productList");
+    productList.innerHTML = "";
+    
+    products.forEach(product => {
+        let label = document.createElement("label");
+        label.innerHTML = `<input type="checkbox" name="product" value="${product}"> ${product}`;
+        productList.appendChild(label);
+        productList.appendChild(document.createElement("br"));
+    });
+})
+.catch(error => console.error("Error fetching products:", error));
+    </script>
+</head>
+<body>
+    <h2>Customer Order Form</h2>
+    <label>Customer Name: <input type="text" id="name"></label><br><br>
+
+    <h3>Select Products:</h3>
+    <div id="productList">Loading products...</div>
+    <br>
+
+    <button onclick="submitForm()">Submit Order</button>
+</body>
+</html>
